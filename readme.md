@@ -19,7 +19,7 @@ The installation process installs the program as a symlink in a new script direc
 Clone this repository:
 
 ```bash
-git clone https://alessandrogilli/backupper.git
+git clone https://github.com/alessandrogilli/backupper.git
 ```
 
 Enter the project directory:
