@@ -14,7 +14,7 @@ Options:
  ```
 
 ## Installation
-The installation process installs the program as a symlink in a new script directory on your ~/.local directory. It auto updates .bashrc and .zshrc files with the new $PATH variable.
+The installation process installs the program as a copy of the script in /usr/local/bin.
 
 Clone this repository:
 
@@ -27,6 +27,20 @@ Enter the project directory:
 cd backupper
 ```
 
+Run the install script as root:
+```bash
+sudo sh ./install.sh
+```
+
+Run the program:
+```bash
+backupper
+```
+
+### Non root installation
+
+If you prefer to install the program without root permissions, the installation process will copy the script in a new "script" directory inside your ~/.local folder. It also auto updates .bashrc and .zshrc files with the new $PATH variable.
+
 Run the install script:
 ```bash
 sh ./install.sh
@@ -36,10 +50,12 @@ Open a new shell or type:
 ```bash
 source ~/.bashrc
 ```
+
 or, if you are using zsh:
 ```bash
 source ~/.zshrc
 ```
+
 Finally, you can find backupper installed, typing:
 ```bash
 backupper
