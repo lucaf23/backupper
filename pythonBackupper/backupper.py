@@ -1,6 +1,7 @@
 import os
 import zipfile
 import sys
+import shutil
 
 
 def usage():
@@ -21,17 +22,45 @@ def create_archive(path="."):
                 for file in files:
                     zipf.write(os.path.join(root, file),
                                os.path.relpath(os.path.join(root, file), path))
-        os.chmod(output_zip, 0o444)
+        os.chmod(output_zip, 0o644) # 444 only read
     else:
         print(f"{output_zip} already exists.")
         sys.exit(1)
 
-def extract_archive():
+def extract_archive(extract_to="."):
     output_zip = f"{os.path.basename(os.getcwd())}.zip"
+    temp_zip = f"{output_zip}.tmp"
+    
     if os.path.isfile(output_zip):
-        with zipfile.ZipFile(output_zip, 'r') as zipf:
-            zipf.extractall()
-        os.remove(output_zip)
+        # Move the ZIP file to a temporary location
+        shutil.move(output_zip, temp_zip)
+        
+        try:
+             # Modify the extraction directory name to avoid conflict with the ZIP file name
+            if extract_to == ".":
+                extract_to = os.path.basename(os.getcwd()) + "_extracted"
+            elif extract_to == os.path.basename(os.getcwd()):
+                extract_to += "_extracted"
+
+            # Create the extraction directory if it doesn't exist
+            if not os.path.exists(extract_to):
+                print(f"Creating directory: {extract_to}")
+                os.makedirs(extract_to)
+            else:
+                print(f"Directory already exists: {extract_to}")
+
+            with zipfile.ZipFile(temp_zip, 'r') as zipf:
+                zipf.extractall(path=extract_to)  # extract_to is the directory where the files will be extracted 
+                extracted_files = zipf.namelist()
+                print(f"Extracted files to {extract_to}:")
+                for file in extracted_files:
+                    print(file)
+        except Exception as e:
+            print(f"An error occurred during extraction: {e}")
+        finally:
+            # Remove the temporary ZIP file
+            os.remove(temp_zip)
+           # print(f"{temp_zip} deleted after extraction.")
     else:
         print(f"No {output_zip} to extract.")
         sys.exit(2)
@@ -56,7 +85,7 @@ if __name__ == "__main__":
     if command in ("-c", "--create"):
         create_archive(path)
     elif command in ("-x", "--extract"):
-        extract_archive()
+        extract_archive(path) # Pass the path argument to specify the extraction directory
     elif command in ("-d", "--delete"):
         delete_archive()
     elif command in ("-h", "--help"):
