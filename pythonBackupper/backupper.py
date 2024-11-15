@@ -11,15 +11,16 @@ def usage():
     print("Manages simple backups of a folder.")
     print("With no path, it will archive the current working directory.")
     print("Options:")
-    print("  -c, --create   Creates an archive of the desired directory, inside the directory or in a new one specified.")
-    print("  -x, --extract  Extracts the content of the archive in the directory.")
-    print("                 Actions for extract:")
-    print("                   1: Extracts from current directory archive.")
-    print("                   2: Extracts from specified archive name.zip or name.tar present in current directory.")
-    print("                   3: Extracts from specified archive name.zip/tar to specified directory.")
-    print("  -d, --delete   Deletes the archive of the current directory.")
-    print("  -f, --format   Specifies the archive format: zip (default) or tar.")
-    print("  -h, --help     Shows this help.") #da aggiornare
+    print("  -c, --create       Creates an archive of the desired directory, inside the directory or in a new one if specified.")
+    print("  -c [path] -f tar   Creates an tar archive of the current directory, in the specified directory.")
+    print("  -x, --extract      Extracts the content of the archive in the directory.")
+    print("                     Actions for extract:")
+    print("                             1: Extracts from current directory archive.")
+    print("  -x [archive_name.format]   2: Extracts from specified archive name.zip or name.tar present in current directory.")
+    print("  -x [name] [path]           3: Extracts from specified archive name.zip/tar to specified directory 'path'.")
+    print("  -d, --delete       Deletes the archive of the current directory. Can specify the format.")
+    print("  -f, --format       Specifies the archive format: zip (default) or tar.")
+    print("  -h, --help         Shows this help and exit.") 
 
 
 def create_zip_archive(path, output_name , passphrase=None):
