@@ -5,6 +5,7 @@ import sys
 import pyzipper
 import getpass
 from datetime import datetime
+import glob
 
 def usage():
     print(f"Usage: {os.path.basename(__file__)} [options] [path]")
@@ -68,14 +69,32 @@ def create_archive(path=".", format="zip", passphrase=None):
         print("Unsupported format. Use 'zip' or 'tar' please.")
         sys.exit(1)
 
+def trovaArchivioRecente(format="zip"):
+    #trova archivio più recente
+    base_name = os.path.basename(os.getcwd())
+    pattern = f"{base_name}_*.{format}"
+    files = glob.glob(pattern)
+    if not files:
+        return None
+    latest_file = max(files, key=os.path.getmtime)
+    return latest_file
 
 def extract_archive(action, path1=".", path2=None, format=None):
     if format is None:
-        format = os.path.splitext(path1)[1][1:]
+        print("Format not specified. Please specify the format of the archive using -f tar/zip.")
+        sys.exit(1)
+        #format = os.path.splitext(path1)[1][1:]
   
     if action == 1:   # Opzione 1: Estrae il contenuto dal file di archivio nella directory corrente
-        output_zip = f"{os.path.basename(os.getcwd())}.{format}"
-        extract_to = os.path.basename(os.getcwd()) + "_extracted"
+        archive_path = trovaArchivioRecente(format)
+        if not archive_path:
+            print(f"Nessun archivio.{format}  trovato nella directory corrente.")
+            sys.exit(1)
+        #output_zip = f"{os.path.basename(os.getcwd())}.{format}"
+        #output_zip = os.path.join(os.getcwd(), archive_path)
+        extract_to = os.path.splitext(archive_path)[0] + "_extracted"
+        print(f"Extracting archive {archive_path} to {extract_to} with format {format}")
+        output_zip = archive_path
     elif action == 2: # Opzione 2: Estrae il contenuto dal file di archivio specificato nella directory corrente
         output_zip = os.path.join(os.getcwd(), path1)
         extract_to = os.path.splitext(path1)[0] + f"_extracted"
@@ -148,6 +167,11 @@ def delete_archive(format="zip"):
         print(f"No {output_zip} to delete.")
         sys.exit(3)
 
+def cutFormat(path="zip"):
+    #estraggo zip o tar da nome file passato
+    _, ext = os.path.splitext(path)
+    return ext[1:] if ext else ""
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         usage()
@@ -159,6 +183,7 @@ if __name__ == "__main__":
     action = 1
     path2 = None
 
+    #func legge pat.xtz tolgo -f da specificare in -x 
     if len(sys.argv) > 3 and (sys.argv[2] == "-f" or sys.argv[2] == "--format"): # caso no path passato
         if sys.argv[3] == "zip" or sys.argv[3] == "tar":
             format = sys.argv[3]
@@ -178,6 +203,8 @@ if __name__ == "__main__":
         passphrase = getpass.getpass("Enter a password for encryption (leave blank for no encryption): ")
         create_archive(path, format if format else "zip", passphrase)
     elif command in ("-x", "--extract"):
+        if(action == 2 | action == 3): #check 
+            format = cutFormat(path)
         extract_archive(action,path,path2,format) # Pass the path argument to specify the extraction directory
     elif command in ("-d", "--delete"):
         delete_archive(format if format else "zip")
