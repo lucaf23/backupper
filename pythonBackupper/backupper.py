@@ -79,6 +79,16 @@ def trovaArchivioRecente(format="zip"):
     latest_file = max(files, key=os.path.getmtime)
     return latest_file
 
+def trovaArchivioVecchio(format="zip"):
+    # Trova l'archivio più vecchio
+    base_name = os.path.basename(os.getcwd())
+    pattern = f"{base_name}_*.{format}"
+    files = glob.glob(pattern)
+    if not files:
+        return None
+    oldest_file = min(files, key=os.path.getmtime)
+    return oldest_file
+
 def extract_archive(action, path1=".", path2=None, format=None):
     if format is None:
         print("Format not specified. Please specify the format of the archive using -f tar/zip.")
@@ -158,13 +168,17 @@ def extract_archive(action, path1=".", path2=None, format=None):
         sys.exit(1)
     
 def delete_archive(format="zip"):
-    output_zip = f"{os.path.basename(os.getcwd())}.{format}"
+    #output_zip = f"{os.path.basename(os.getcwd())}.{format}"
+    archive_path = trovaArchivioVecchio(format)
+    if not archive_path:
+        print(f"Nessun archivio nella directory trovato con formato: {format}.")
+        sys.exit(3)
 
-    if os.path.isfile(output_zip):
-        os.remove(output_zip)
-        print(f"{output_zip} deleted.")
+    if os.path.isfile(archive_path):
+        os.remove(archive_path)
+        print(f"{archive_path} eliminato.")
     else:
-        print(f"No {output_zip} to delete.")
+        print(f"No archive found with the name {archive_path}.")
         sys.exit(3)
 
 def cutFormat(path="zip"):
