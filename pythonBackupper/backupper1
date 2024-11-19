@@ -1,0 +1,72 @@
+.TH BACKUPPER 1 "18 Novembre 2023" 
+.SH NAME
+backupper \- semplice app per fare il backup della cartella desiderata
+.SH SYNOPSIS
+.B backuppe
+[\fB\-c\fR | \fB\-x\fR | \fB\-d\fR] [\fB\-c\fR | \fB\-\-create\fR] [\fB\-x\fR | \fB\-\-extract\fR] [\fB\-d\fR | \fB\-\-delete\fR] [\fIparametro\fR] [\fB-f\fR | \fB--format\fR] [\fIformato\fR]
+.SH DESCRIPTION
+Backupper permette una semplice gestione dei backups per una cartella desiderata. Se viene lanciato un comando senza parametro o path dopo, il comando verrà eseguito sulla cartella di lavoro corrente. In generale Backupper permette di creare, estrarre e cancellare le cartelle di backups semplicemente. E' possibile scegliere al momento della creazione il tipo di formato con cui si desidera archiviare la cartella, zip (default) o tar. Solo l'archiviazione tramite formato ZIP permette di inserire una passprhase che verrà cryptata con 256 bits. Le cartelle create verranno salvate automaticamente con la data del giorno corrente. L'opzione di eliminazione cancellerà l'archivio, se presente, in data meno recente.
+.SH OPTIONS
+.TP
+.B \-c, --create 
+Crea un archivio contenente tutti i file di una cartella desiderata e supporta l'utilizzo della scelta di formato tramite flags -f (ZIP default).L'utilizzo dipende dai parametri di input.
+.TP
+.B -c <.>
+Crea dentro la cartella di lavoro corrente, una copia di backup di essa.
+.TP
+.B -c <path>
+Crea una copia di backup della corrente cartella di lavoro e la salva dentro 'path'. Path deve essere indirizzo assoluto della cartella.
+.TP
+.B \-x, --extract
+Estrae un archivio creato con backupper. L'utilizzo dipende dai parametri di input.
+.TP
+.B -x <.> -f <formato>
+Estrae l'archivio col nome della directory corrente e la data più recente nella cartella di lavoro corrente ed aggiunge il suffisso  "_extracted". Il formato deve essere uguale a quello con cui è stato creato l'archivio.
+.TP
+.B -x <nome_archivio.format>
+Estrae dalla cartella di lavoro corrente l'archivio con nome 'nome_archivio' e formato 'format' e lo salva nella cartella di lavoro corrente con il suffisso "_extracted". Non serve specificare il formato con -f.
+.TP
+.B -x <nome_archivo.format> <path>
+Estrae dalla cartella di lavoro corrente l'archivio con nome 'nome_archivio', formato 'format' e lo salva nella cartella 'path'. Path deve essere un indirizzo assoluto realmente esistente. Non serve specificare il formato con -f.
+.TP
+.B \-d "," --delete
+Cancella l' archivio creato in data meno recente. Necessario specificare il formato con -f,se no cercherà di cancellare un archivio con formato default (ZIP).
+.TP
+.B \-f "," --format
+Permette di specificare il formato con cui si desidera creare l'archivio. I formati supportati sono ZIP e TAR. Se non specificato, il formato di default è ZIP.
+.TP
+.B \-h "," --help
+Mostra l'help con le istruzioni di utilizzo.
+.SH EXAMPLES
+.TP
+.B backupper -c .
+Crea un archivio della cartella di lavoro corrente.
+.TP
+.B backupper -c /path/to/save
+Crea un archivio della cartella di lavoro corrente e lo salva nel percorso specificato.
+.TP
+.B backupper -x .
+Estrae l'archivio più recente nella cartella di lavoro corrente.
+.TP
+.B backupper -x /path/to/archive.zip
+Estrae l'archivio specificato nella cartella di lavoro corrente.
+.TP
+.B backupper -d -f zip
+Cancella l'archivio ZIP più recente nella cartella di lavoro corrente.
+.SH EXIT STATUS
+.TP
+0
+L'esecuzione del programma ha avuto successo.
+.TP
+1
+Errore d'uso, di sintassi o nel file di configurazione.
+.TP
+2
+Errore operativo.
+.TP
+3
+Errore nel passaggio numero di argomenti, inferiore a 2.
+.SH AUTHOR
+Backupper è stato sviluppato da lucaf23.
+.SH COPYRIGHT
+Copyright (C) 2023 lucaf23. Tutti i diritti riservati.

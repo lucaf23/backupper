@@ -145,10 +145,10 @@ def extract_archive(action, path1=".", path2=None, format=None):
                                     print(file)
                         except RuntimeError as e:
                             print("Password incorrect. Extraction failed.")
-                            sys.exit(1)
+                            sys.exit(2)
                     else:
                         print(f"An error occurred: {e}")
-                        sys.exit(1)
+                        sys.exit(2)
             elif format == "tar":
                 with tarfile.open(output_zip, 'r') as tarf:
                     tarf.extractall(path=extract_to)
@@ -172,14 +172,14 @@ def delete_archive(format="zip"):
     archive_path = trovaArchivioVecchio(format)
     if not archive_path:
         print(f"Nessun archivio nella directory trovato con formato: {format}.")
-        sys.exit(3)
+        sys.exit(1)
 
     if os.path.isfile(archive_path):
         os.remove(archive_path)
         print(f"{archive_path} eliminato.")
     else:
         print(f"No archive found with the name {archive_path}.")
-        sys.exit(3)
+        sys.exit(1)
 
 def cutFormat(path="zip"):
     #estraggo zip o tar da nome file passato
@@ -189,7 +189,7 @@ def cutFormat(path="zip"):
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         usage()
-        sys.exit(4)
+        sys.exit(3)
 
     command = sys.argv[1]
     format = None #default
@@ -226,4 +226,4 @@ if __name__ == "__main__":
         usage()
     else:
         usage()
-        sys.exit(4)
+        sys.exit(3)
