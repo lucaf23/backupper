@@ -186,7 +186,7 @@ def cutFormat(path="zip"):
     _, ext = os.path.splitext(path)
     return ext[1:] if ext else ""
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
         usage()
         sys.exit(3)
@@ -227,3 +227,6 @@ if __name__ == "__main__":
     else:
         usage()
         sys.exit(3)
+
+if __name__ == "__main__":
+    main()
